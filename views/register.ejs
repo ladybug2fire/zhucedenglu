@@ -1,0 +1,106 @@
+<style>
+.code{
+    width: 80px;
+    height: 40px;
+    background-color: whitesmoke;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+#showoff{
+    display: none;
+}
+.form-group{
+    margin-bottom: 10px;
+    width: 200px;
+    text-align: left;
+}
+.form-group input:not([type=radio]){
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    /* outline: none; */
+    outline-color: #5599FF;
+}
+.code-block{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+}
+.button { /* 按钮美化 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #1E90FF; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 14px; /* 字体大小 */
+    flex-grow: 1;
+    width: 100%;
+}
+.button:hover { /* 鼠标移入按钮范围时改变颜色 */
+	background: #5599FF;
+}
+</style>
+<div id="app">
+    <center>
+      <h1>{{message}}</h1>
+      <form action="" method="POST">
+      <div class="form-group">
+          <input type="text" placeholder="用户名" />
+      </div>
+      <div class="form-group">
+          <input type="password" placeholder="密码" />
+      </div>
+      <div class="form-group">
+          <label><input name="type" type="radio" value="0" onchange="radioChange(event)"/>汇优 </label>
+          <label><input name="type" type="radio" value="1" onchange="radioChange(event)" />趣智 </label>
+      </div>
+      <div class="form-group">
+          <input type="text" id="phone" placeholder="手机号码">
+      </div>
+      <div id="showoff">
+          <div class="form-group">
+              <input type="text" placeholder="趣智校园密码/验证码">
+          </div>
+          <div class="code-block form-group">
+              <img id="code" class="code" alt="">
+              <input type="text" placeholder="短信验证码"> 
+              <button class="button" onclick="fetchCode()" type="button">获取验证码</button>
+            </div>
+      </div>
+      <div class="form-group">
+          <button class="button" type="submit">登录</button>
+      </div>
+    </form>
+    </center>
+</div>
+<script src="/javascripts/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+    function radioChange(e){
+        console.log(e.target.value)
+        var showoff = document.querySelector('#showoff');
+        if(e.target.value == 1){
+            showoff.style.display = 'none'
+        }else{
+            showoff.style.display = 'block'
+        }
+    }
+    function fetchCode(){
+        var phone = document.querySelector('#phone')
+        if(!phone.value){
+            alert('手机号不能为空')
+            return;
+        }
+        document.querySelector('#code').src = 'http://localhost:3000/users/authImage?mobile=' + phone.value;
+    }
+</script>
+
