@@ -15,10 +15,7 @@ class UserModel {
      * @returns {Promise<*>}
      */
     static async createUser(data){
-        return await User.create({
-            UserName: data.username, 
-            Password: data.password, 
-        });
+        return await User.create(data);
     }
 
     /**
@@ -32,6 +29,14 @@ class UserModel {
                 id
             }
         });
+    }
+
+    static async getUser(username){
+        return await User.findOne({
+            where:{
+                UserName: username
+            }
+        }); 
     }
 }
 

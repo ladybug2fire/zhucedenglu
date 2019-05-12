@@ -10,10 +10,14 @@ router.get('/register', async function(ctx, next){
   await ctx.render('register')
 })
 
+router.post('/register', UserController.register)
+
 router.get('/getCode', UserController.getCode)
 
 router.get('/authImage', UserController.authImage)
 
 router.get('/login', UserController.login)
+
+router.get('/:id', )
 
 module.exports = router

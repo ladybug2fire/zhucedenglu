@@ -2,15 +2,20 @@ const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
 const json = require('koa-json')
-const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 
-// error handler
-onerror(app)
+app.use(async (ctx, next)=>{
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = 200;
+    ctx.body = JSON.stringify({ msg: err.message, code: err.code })
+  }
+})
 
 // middlewares
 app.use(bodyparser({
@@ -33,22 +38,9 @@ app.use(async (ctx, next) => {
 })
 
 
-
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
-
-// error-handling
-app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
-});
-
-/* 全局错误抛出 */
-app.use((error, req, res, next) => {
-  if (error) {
-    res.json({ msg: error.message, code: error.code })
-  }
-});
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 // module.exports = app
