@@ -13,7 +13,7 @@ app.use(async (ctx, next)=>{
     await next();
   } catch (err) {
     ctx.status = 200;
-    ctx.body = JSON.stringify({ msg: err.message, code: err.code })
+    ctx.body = JSON.stringify({ message: err.message, error_code: err.code })
   }
 })
 

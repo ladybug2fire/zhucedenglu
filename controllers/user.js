@@ -1,10 +1,12 @@
 const UserModel = require("../modules/user");
+const UserSchema = require("../schema/user.joi")
 const axios = require("axios");
 const request = require("request");
 const _ = require("lodash");
 const MD5 = require("crypto-js/md5");
 const moment = require("moment");
 const ApiError = require("../util/ApiError");
+const Joi = require('@hapi/joi');
 class userController {
   /**
    * 创建用户
@@ -146,6 +148,11 @@ class userController {
 
   static async register(ctx) {
     let req = ctx.request.body;
+    const result = Joi.validate(req, UserSchema)
+    console.log(result, req)
+    if(result.error){
+        throw new ApiError(416, result.error)
+    }
     if (req.UserName && req.Password) {
       let thridVerify = null;
       let user = _.pick(req, ['UserName', 'Password', 'TelPhone', 'UserType']);
