@@ -7,19 +7,34 @@
 var app = require('../app');
 var debug = require('debug')('demo:server');
 var http = require('http');
+var https = require('https');
+var fs = require('fs')
+var path = require('path')
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
+var SSLPORT = 8001;
 // app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
+ //根据项目的路径导入生成的证书文件
+var privateKey  = fs.readFileSync(path.join(__dirname, './certificate/private.pem'), 'utf8');
+var certificate = fs.readFileSync(path.join(__dirname, './certificate/ca.cer'), 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
+//创建http与HTTPS服务器
+var httpsServer = https.createServer(credentials, app.callback());
 var server = http.createServer(app.callback());
+
+httpsServer.listen(SSLPORT, function() {
+  console.log('HTTPS Server is running on: https://localhost:%s', SSLPORT);
+});
 
 /**
  * Listen on provided port, on all network interfaces.
